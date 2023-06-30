@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Client\Request;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -34,8 +37,25 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
+
+        $this->validate($request,[
+            'name' => 'required|string',
+            'job_title' => 'required|string',
+            'email' => 'required|string|email|unique:employee,email',
+            'password' => 'required|min:8',
+        ]);
+
+        Employee::create([
+            'name'=> $request['name'],
+            'job_title'=> $request['job_title'],
+            'email'=>$request['email'],
+            'password' =>Hash::make($request['password']),
+        ]);
+
         return response()->json(
-            $request->all(),
+            [
+                'message' => "User registrado com sucesso!!!"
+            ]
         );
     }
 
