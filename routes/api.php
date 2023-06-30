@@ -18,6 +18,8 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // });
 
+
+
 Route::get(
     '/',
     function() {
@@ -25,4 +27,20 @@ Route::get(
     }
 );
 
-Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+// Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+
+
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('logout',  [AuthController::class, 'logout']);
+    Route::post('refresh',  [AuthController::class, 'refresh']);
+    Route::post('me',  [AuthController::class, 'me']);
+    Route::post('register',  [AuthController::class, 'register']);
+
+});
