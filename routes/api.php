@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,8 +29,6 @@ Route::get(
     }
 );
 
-// Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
-
 
 Route::group([
 
@@ -38,9 +38,17 @@ Route::group([
 ], function ($router) {
 
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
-    Route::post('logout',  [AuthController::class, 'logout']);
-    Route::post('refresh',  [AuthController::class, 'refresh']);
-    Route::post('me',  [AuthController::class, 'me']);
+    Route::get('logout',  [AuthController::class, 'logout']);
+    Route::get('refresh',  [AuthController::class, 'refresh']);
+    Route::get('me',  [AuthController::class, 'me']);
     Route::post('register',  [AuthController::class, 'register']);
+});
+
+Route::group([
+
+    'middleware' => 'auth:api',
+
+], function () {
+    Route::patch('user/profile', [EmployeeController::class, 'profile']);
 
 });
